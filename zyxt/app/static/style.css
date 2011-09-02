@@ -1,0 +1,171 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    font-family: 'Reenie Beanie', cursive;
+    font-weight: normal;
+    text-decoration: none;
+    color: black;
+}
+
+html {
+    background: white;
+}
+
+body {
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    padding-top: 5px;
+    box-shadow: 0px 0px 10px 5px #888;
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, rgb(255,247,174)),
+        color-stop(1, rgb(255,255,255))
+    );
+    background-image: -moz-linear-gradient(
+        center bottom,
+        rgb(255,247,174) 0%,
+        rgb(255,255,255) 100%
+    );
+}
+
+header, footer {
+    margin-left: 5px;
+}
+
+header {
+    border-bottom: 2px solid black;
+}
+
+h1>a {
+    font-family: 'Rock Salt', cursive;
+    font-weight: bold;
+    font-size: 35px;
+}
+
+h3 {
+    font-family: 'Rock Salt', cursive;
+    font-size: 25px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+h3>a {
+    font-family: 'Rock Salt', cursive;
+    font-size: 25px;
+}
+
+h3>span {
+    font-family: 'Rock Salt', cursive;
+    font-size: 20px;
+}
+
+h4 {
+    font-family: 'Rock Salt', cursive;
+    font-size: 20px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+h4>span {
+    font-family: 'Rock Salt', cursive;
+    font-size: 15px;
+}
+
+h4>a {
+    font-family: 'Rock Salt', cursive;
+    font-size: 20px;
+}
+
+footer {
+    font-family: 'Rock Salt', cursive;
+    border-top: 2px dotted black;
+    margin-top: 100px;
+    padding-top: 2px;
+}
+
+p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+input[type="submit"] {
+    padding: 1px 6px;
+    font-size: 20px;
+}
+
+input {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 25px;
+}
+
+nav {
+    clear: both;
+}
+
+nav>ul>li {
+    float: left;
+    margin: 5px;
+    margin-right: 2%;
+    border-bottom: 1px dotted #DC143C;
+}
+
+nav>ul>li>a {
+    color: #DC143C;
+    font-family: 'Rock Salt', cursive;
+    font-size: 20px;
+}
+
+form>ul>li {
+    border-bottom: 1px dotted black;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.social {
+    clear: both;
+    margin-left: 5px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+.content {
+    clear: both;
+    padding: 5px;
+    min-height: 500px;
+    font-size: 35px;
+}
+
+.content>ol>li, .content>ul>li {
+    border-bottom: 1px dotted black;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.content a {
+    color: #DC143C;
+    text-decoration: underline;
+}
+
+.helptext {
+    display: block;
+    color: gray;
+    font-size: 0.8em;
+}
+
+.errorlist li, .error {
+    color: #DC143C;
+}
+
+.fb_iframe_widget, .twitter-share-button {
+    float: left;
+}

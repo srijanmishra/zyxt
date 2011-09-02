@@ -1,0 +1,27 @@
+{% extends 'extended.html' %}
+
+{% block title %}
+    {% if title %}
+        {{ title }}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h3>{{ quiz }} - <span style="color: gray;">{{ quiz.short_description }}</span></h3>
+    {% if quiz.display == 'Y' %}
+        <p>{{ quiz.long_description }}</p>
+        <p>
+            {% if quiz.start_time %}
+                Starting Time: {{ quiz.start_time }} IST<br>
+            {% endif %}
+            {% if quiz.end_time %}
+                Ending Time: {{ quiz.end_time }} IST
+            {% endif %}
+        </p>
+        <p><a href="{% url zyxt.app.views.quiz quiz.id 1 1 %}">Start Quiz</a></p>
+    {% else %}
+        <p>Quiz has not opened yet. Kindly check later.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if title %}
+        {{ title }}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}
+
+{% block externals %}
+    <link href='http://fonts.googleapis.com/css?family=Rock+Salt|Reenie+Beanie' rel='stylesheet' type='text/css'>
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}style.css" />
+{% endblock %}

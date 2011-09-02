@@ -1,0 +1,24 @@
+{% extends 'extended.html' %}
+
+{% block content %}
+    <h3>{{ quiz }} - <span style="color: gray;">{{ quiz.short_description }}</span></h3>
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+    {% if question %}
+        {{ question|safe }}
+        <form action="" method="post">
+            {% csrf_token %}
+            <label for="answer">Answer</label>
+            <input type="text" id="answer" name="answer" />
+            <input type="submit" name="submit" value="Submit" />
+        </form>
+        <h4>Discussions and Comments</h4>
+        <div id="fb-root"></div>
+        <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
+        <fb:comments href="{{ uri }}" num_posts="5" width="500"></fb:comments>
+    {% endif %}
+    {% if content %}
+        {{ content }}
+    {% endif %}
+{% endblock %}

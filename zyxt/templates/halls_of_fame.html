@@ -1,0 +1,58 @@
+{% extends 'extended.html' %}
+
+{% block title %}
+    {% if title %}
+        {{ title }}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if quizzes %}
+        <h3>Select a quiz</h3>
+        <ul>
+            {% for quiz in quizzes %}
+                <li>
+                    <a href="{% url zyxt.app.views.halls_of_fame quiz.id %}">{{ quiz }}</a> - <span style="color: gray;">{{ quiz.short_description }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if levels %}
+        {% if page != 1 or nextPage != 0 %}
+            <ul>
+                <li>
+                    {% if page != 1 %}
+                        <a href="?page={{ prevPage }}">Previous Page</a>
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+                    {% if nextPage != 0 %}
+                        <a style="float: right;" href="?page={{ nextPage }}">Next Page</a>
+                    {% endif %}
+                </li>
+            </ul>
+        {% endif %}
+        <h3><a href="{% url zyxt.app.views.quiz_description quiz.id %}">{{ quiz.name }}</a> - <span style="color: gray;">{{ quiz.short_description }}</span></h3>
+        <ol>
+            {% for level in levels %}
+                <li>{{ level.user.username }} - Level {{ level.level }}</li>
+            {% endfor %}
+        </ol>
+        {% if page != 1 or nextPage != 0 %}
+            <ul>
+                <li>
+                    {% if page != 1 %}
+                        <a href="?page={{ prevPage }}">Previous Page</a>
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+                    {% if nextPage != 0 %}
+                        <a style="float: right;" href="?page={{ nextPage }}">Next Page</a>
+                    {% endif %}
+                </li>
+            </ul>
+        {% endif %}
+    {% endif %}
+{% endblock %}

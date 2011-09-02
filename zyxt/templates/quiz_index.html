@@ -1,0 +1,26 @@
+{% extends 'extended.html' %}
+
+{% block title %}
+    {% if title %}
+        {{ title }}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h3>List of quizzes</h3>
+    <ul>
+        {% for quiz in quizzes %}
+            <li>
+                <h4><a href="{% url zyxt.app.views.quiz_description quiz.id %}">{{ quiz }}</a> - <span style="color: gray;">{{ quiz.short_description }}</span></h4>
+                {% if quiz.start_time %}
+                    Starting Time: {{ quiz.start_time }} IST<br>
+                {% endif %}
+                {% if quiz.end_time %}
+                    Ending Time: {{ quiz.end_time }} IST
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
