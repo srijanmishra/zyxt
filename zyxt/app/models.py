@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User, UserManager
+from datetime import datetime
 
 class Quiz(models.Model):
     DISPLAY_CHOICES = (
@@ -17,24 +18,42 @@ class Quiz(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     
+    class Meta:
+        verbose_name_plural = 'Quizzes'
+    
     def __unicode__(self):
         return self.name
     
-    class Meta:
-        verbose_name_plural = 'Quizzes'
+    def is_closed(self):
+        now = datetime.now()
+        
+        if self.start_time and self.start_time > now:
+            return u'The quiz has not started yet. Kindly check later.'
+        if self.end_time and self.end_time < now:
+            return u'The quiz has ended. You can try other quizzes.'
+        if self.display == 'N':
+            return u'This quiz is not open yet. Kindly check later.'
+        
+        return False
+    
+    def has_questions(self):
+        if self.question_set.all():
+            return True
+        else:
+            return False
 
 class Question(models.Model):
     level = models.IntegerField()
     question = models.TextField()
     answers = models.TextField()
     quiz = models.ForeignKey(Quiz)
-
-    def __unicode__(self):
-        return self.question
     
     class Meta:
         unique_together = (('level', 'quiz'),)
         ordering = ['-quiz', '-level']
+    
+    def __unicode__(self):
+        return self.question
 
 class UserProfile(User):
     name = models.CharField(max_length=30)
@@ -53,9 +72,9 @@ class Level(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     
-    def __unicode__(self):
-        return '%s - Level %d' % (self.user.username, self.level)
-    
     class Meta:
         unique_together = ('user', 'quiz', 'level')
         ordering = ['-quiz', '-level', '-modified']
+    
+    def __unicode__(self):
+        return '%s - Level %d' % (self.user.username, self.level)

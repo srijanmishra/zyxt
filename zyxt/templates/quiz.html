@@ -1,7 +1,7 @@
 {% extends 'extended.html' %}
 
 {% block content %}
-    <h3>{{ quiz }} - <span style="color: gray;">{{ quiz.short_description }}</span></h3>
+    <h3>{{ quiz }} - {{ quiz.short_description }}</h3>
     {% if error %}
         <div class="error">{{ error }}</div>
     {% endif %}

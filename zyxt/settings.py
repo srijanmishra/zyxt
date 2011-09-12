@@ -5,12 +5,14 @@ import json
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
+PROD = True
+
 ADMINS = (
-          ('Kushagra Sinha', 'sinha.kushagra@gmail.com'),
-          )
+    ('Kushagra Sinha', 'sinha.kushagra@gmail.com'),
+)
 
 MANAGERS = ADMINS
 
@@ -65,7 +67,10 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, '../../static_repo/static/')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = 'http://zyxt-static.herokuapp.com/'
+if PROD:
+    STATIC_URL = 'http://zyxt-static.herokuapp.com/'
+else:
+    STATIC_URL = '/static/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.

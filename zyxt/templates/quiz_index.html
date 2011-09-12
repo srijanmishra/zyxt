@@ -13,7 +13,7 @@
     <ul>
         {% for quiz in quizzes %}
             <li>
-                <h4><a href="{% url zyxt.app.views.quiz_description quiz.id %}">{{ quiz }}</a> - <span style="color: gray;">{{ quiz.short_description }}</span></h4>
+                <h4><a href="{% url zyxt.app.views.quiz_description quiz.id %}">{{ quiz }}</a> - {{ quiz.short_description }}</h4>
                 {% if quiz.start_time %}
                     Starting Time: {{ quiz.start_time }} IST<br>
                 {% endif %}

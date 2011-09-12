@@ -20,11 +20,11 @@ def registration(request):
     else:
         form = RegistrationForm()
     
-    templateData = {
-                    'title': 'ZYXT - Registration',
-                    'form': form,
-                    }
-    return render_to_response('registration/registration.html', templateData, context_instance=RequestContext(request))
+    template_data = {
+        'title': 'ZYXT - Registration',
+        'form': form,
+    }
+    return render_to_response('registration/registration.html', template_data, context_instance=RequestContext(request))
 
 def halls_of_fame(request, id=None):
     if not id:
@@ -49,100 +49,86 @@ def halls_of_fame(request, id=None):
         except IndexError:
             nextPage = 0
         
-        templateData = {
-                        'title': 'ZYXT - Halls of Fame',
-                        'page': page,
-                        'nextPage': nextPage,
-                        'prevPage': page-1,
-                        'quiz': quiz,
-                        'levels': quiz.level_set.order_by('-level')[start:end],
-                        }
-        return render_to_response('halls_of_fame.html', templateData, context_instance=RequestContext(request))
+        template_data = {
+            'title': 'ZYXT - Halls of Fame',
+            'page': page,
+            'nextPage': nextPage,
+            'prevPage': page-1,
+            'quiz': quiz,
+            'levels': quiz.level_set.order_by('-level')[start:end],
+        }
+        return render_to_response('halls_of_fame.html', template_data, context_instance=RequestContext(request))
 
 def quiz_index(request):
     quizzes = Quiz.objects.filter(display='Y')
     
-    templateData = {
-                    'title': 'ZYXT - Quizzes',
-                    'quizzes': quizzes,
-                    }
-    return render_to_response('quiz_index.html', templateData, context_instance=RequestContext(request))
+    template_data = {
+        'title': 'ZYXT - Quizzes',
+        'quizzes': quizzes,
+    }
+    return render_to_response('quiz_index.html', template_data, context_instance=RequestContext(request))
 
 def quiz_description(request, id):
     quiz = get_object_or_404(Quiz, id=id)
-    templateData = {
-                    'title': 'ZYXT - Quiz',
-                    'quiz': quiz,
-                    }
-    return render_to_response('quiz_description.html', templateData, context_instance=RequestContext(request))
+    template_data = {
+        'title': 'ZYXT - Quiz',
+        'quiz': quiz,
+    }
+    return render_to_response('quiz_description.html', template_data, context_instance=RequestContext(request))
 
 @login_required
 def quiz(request, id, level, restart=0):
     quiz = get_object_or_404(Quiz, id=id)
     
-    # Check whether the current user is permitted to view this level
+    # Check whether the current user has started the quiz before
     user = get_object_or_404(UserProfile, username=request.user)
     try:
         user.level_set.get(quiz=id)
     except Level.DoesNotExist:
         user.level_set.create(quiz=quiz, level=1)
     
+    # Check whether the current user is permitted to view this level
     current_level = int(user.level_set.get(quiz=id).level)
     if int(level) > current_level:
         return render_to_response('cheating.html', {}, context_instance=RequestContext(request))
     
-    # Check whether the time is right
-    now = datetime.now()
-    if quiz.start_time and quiz.start_time > now:
-        templateData = {
-                        'title': 'ZYXT - Quiz',
-                        'quiz': quiz,
-                        'content': 'This quiz has not started yet. Kindly check later.',
-                        }
-        return render_to_response('quiz.html', templateData, context_instance=RequestContext(request))
-    if quiz.end_time and quiz.end_time < now:
-        templateData = {
-                        'title': 'ZYXT - Quiz',
-                        'quiz': quiz,
-                        'content': 'This quiz has ended. Meanwhile, you can try other quizzes.',
-                        }
-        return render_to_response('quiz.html', templateData, context_instance=RequestContext(request))
+    # Check if user is restarting the quiz
+    if restart:
+        return HttpResponseRedirect('/quiz/%s/%s/' % (id, current_level))
     
-    # Check whether quiz is open yet
-    if quiz.display == 'N':
-        templateData = {
-                        'title': 'ZYXT - Quiz',
-                        'quiz': quiz,
-                        'content': 'Quiz has not opened yet. Kindly check later.',
-                        }
-        return render_to_response('quiz.html', templateData, context_instance=RequestContext(request))
+    # Check whether quiz is closed
+    closed = quiz.is_closed()
+    if closed:
+        template_data = {
+            'title': 'ZYXT - Quiz',
+            'quiz': quiz,
+            'content': closed,
+        }
+        return render_to_response('quiz.html', template_data, context_instance=RequestContext(request))
     
     # Check if questions have been added to the quiz
-    if not quiz.question_set.order_by('-level'):
-        templateData = {
-                        'title': 'ZYXT - Quiz',
-                        'quiz': quiz,
-                        'content': 'Questions are yet to be added to this quiz. Kindly check later.',
-                        }
-        return render_to_response('quiz.html', templateData, context_instance=RequestContext(request))
+    if not quiz.has_questions():
+        template_data = {
+            'title': 'ZYXT - Quiz',
+            'quiz': quiz,
+            'content': 'Questions are yet to be added to this quiz. Kindly check later.',
+        }
+        return render_to_response('quiz.html', template_data, context_instance=RequestContext(request))
     
     # Check if user has completed the quiz
-    if int(level) > int(quiz.question_set.order_by('-level')[0].level):
-        templateData = {
-                        'title': 'ZYXT - Quiz',
-                        'quiz': quiz,
-                        'content': 'Congratulations. You have completed the quiz.',
-                        }
-        return render_to_response('quiz.html', templateData, context_instance=RequestContext(request))
+    highest_level = int(quiz.question_set.order_by('-level')[0].level)
+    if int(level) > highest_level:
+        template_data = {
+            'title': 'ZYXT - Quiz',
+            'quiz': quiz,
+            'content': 'Congratulations. You have completed the quiz.',
+        }
+        return render_to_response('quiz.html', template_data, context_instance=RequestContext(request))
     
     try:
         question = quiz.question_set.get(level=level)
     except Question.DoesNotExist:
         raise Http404
-    
-    # Check if user is restarting the quiz
-    if restart:
-        return HttpResponseRedirect('/quiz/%s/%s/' % (id, current_level))
     
     error = ''
     if request.POST:
@@ -159,12 +145,12 @@ def quiz(request, id, level, restart=0):
         else:
             error = 'Wrong Answer. Try Again.'
     
-    templateData = {
-                    'title': 'ZYXT - Quiz',
-                    'quiz': quiz,
-                    'uri': 'http://zyxt.in%s' % (request.path,),
-                    'error': error,
-                    'question': question.question,
-                    }
+    template_data = {
+        'title': 'ZYXT - Quiz',
+        'quiz': quiz,
+        'uri': 'http://zyxt.in%s' % (request.path,),
+        'error': error,
+        'question': question.question,
+    }
     
-    return render_to_response('quiz.html', templateData, context_instance=RequestContext(request))
+    return render_to_response('quiz.html', template_data, context_instance=RequestContext(request))

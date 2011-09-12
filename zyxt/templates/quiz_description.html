@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-    <h3>{{ quiz }} - <span style="color: gray;">{{ quiz.short_description }}</span></h3>
+    <h3>{{ quiz }} - {{ quiz.short_description }}</h3>
     {% if quiz.display == 'Y' %}
         <p>{{ quiz.long_description }}</p>
         <p>
