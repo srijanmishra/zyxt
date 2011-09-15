@@ -29,11 +29,11 @@ def registration(request):
 def halls_of_fame(request, id=None):
     if not id:
         quizzes = Quiz.objects.filter(display='Y')
-        templateData = {
+        template_data = {
                         'title': 'ZYXT - Halls of Fame',
                         'quizzes': quizzes,
                         }
-        return render_to_response('halls_of_fame.html', templateData, context_instance=RequestContext(request))
+        return render_to_response('halls_of_fame.html', template_data, context_instance=RequestContext(request))
     else:
         PAGINATE_BY = 10
         
